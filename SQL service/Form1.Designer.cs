@@ -32,7 +32,7 @@
             this.btnOdswiez = new System.Windows.Forms.Button();
             this.btn_addCol = new System.Windows.Forms.Button();
             this.btn_delCol = new System.Windows.Forms.Button();
-            this.tbNameCol = new System.Windows.Forms.TextBox();
+            this.tableColumnName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -44,14 +44,14 @@
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.cbSer = new System.Windows.Forms.ComboBox();
+            this.cbServer = new System.Windows.Forms.ComboBox();
             this.Z_S = new System.Windows.Forms.Button();
             this.Z_B = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
-            this.cbBaz = new System.Windows.Forms.ComboBox();
+            this.cbBase = new System.Windows.Forms.ComboBox();
             this.Z_T = new System.Windows.Forms.Button();
             this.panel6 = new System.Windows.Forms.Panel();
-            this.cbTab = new System.Windows.Forms.ComboBox();
+            this.cbTable = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridDB)).BeginInit();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -80,7 +80,7 @@
             this.btnOdswiez.TabIndex = 2;
             this.btnOdswiez.Text = "Wyświetl dane z tabeli";
             this.btnOdswiez.UseVisualStyleBackColor = true;
-            this.btnOdswiez.Click += new System.EventHandler(this.btnOdswiez_Click);
+            this.btnOdswiez.Click += new System.EventHandler(this.btn_showDataFromTable);
             // 
             // btn_addCol
             // 
@@ -91,7 +91,7 @@
             this.btn_addCol.TabIndex = 3;
             this.btn_addCol.Text = "Dodaj kolumnę";
             this.btn_addCol.UseVisualStyleBackColor = true;
-            this.btn_addCol.Click += new System.EventHandler(this.btn_addCol_Click);
+            this.btn_addCol.Click += new System.EventHandler(this.btn_addColumn);
             // 
             // btn_delCol
             // 
@@ -102,15 +102,15 @@
             this.btn_delCol.TabIndex = 4;
             this.btn_delCol.Text = "Usuń kolumnę";
             this.btn_delCol.UseVisualStyleBackColor = true;
-            this.btn_delCol.Click += new System.EventHandler(this.btn_delCol_Click);
+            this.btn_delCol.Click += new System.EventHandler(this.btn_deleteColumn);
             // 
-            // tbNameCol
+            // tableColumnName
             // 
-            this.tbNameCol.Location = new System.Drawing.Point(134, 435);
-            this.tbNameCol.Margin = new System.Windows.Forms.Padding(4);
-            this.tbNameCol.Name = "tbNameCol";
-            this.tbNameCol.Size = new System.Drawing.Size(156, 22);
-            this.tbNameCol.TabIndex = 5;
+            this.tableColumnName.Location = new System.Drawing.Point(134, 435);
+            this.tableColumnName.Margin = new System.Windows.Forms.Padding(4);
+            this.tableColumnName.Name = "tbNameCol";
+            this.tableColumnName.Size = new System.Drawing.Size(156, 22);
+            this.tableColumnName.TabIndex = 5;
             // 
             // label1
             // 
@@ -130,7 +130,7 @@
             this.button1.TabIndex = 7;
             this.button1.Text = "Search for severs";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.btn_Ser);
+            this.button1.Click += new System.EventHandler(this.btn_findServers);
             // 
             // panel2
             // 
@@ -156,7 +156,7 @@
             this.button2.TabIndex = 9;
             this.button2.Text = "Search databases from selected server";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.btn_Baz);
+            this.button2.Click += new System.EventHandler(this.btn_findBases);
             // 
             // panel3
             // 
@@ -182,7 +182,7 @@
             this.button3.TabIndex = 10;
             this.button3.Text = "search for tables from selected database";
             this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.btn_Tab);
+            this.button3.Click += new System.EventHandler(this.btn_findTables);
             // 
             // comboBox3
             // 
@@ -202,19 +202,19 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.cbSer);
+            this.panel1.Controls.Add(this.cbServer);
             this.panel1.Location = new System.Drawing.Point(492, 106);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(200, 57);
             this.panel1.TabIndex = 7;
             // 
-            // cbSer
+            // cbServer
             // 
-            this.cbSer.FormattingEnabled = true;
-            this.cbSer.Location = new System.Drawing.Point(3, 3);
-            this.cbSer.Name = "cbSer";
-            this.cbSer.Size = new System.Drawing.Size(194, 24);
-            this.cbSer.TabIndex = 0;
+            this.cbServer.FormattingEnabled = true;
+            this.cbServer.Location = new System.Drawing.Point(3, 3);
+            this.cbServer.Name = "cbSer";
+            this.cbServer.Size = new System.Drawing.Size(194, 24);
+            this.cbServer.TabIndex = 0;
             // 
             // Z_S
             // 
@@ -222,9 +222,9 @@
             this.Z_S.Name = "Z_S";
             this.Z_S.Size = new System.Drawing.Size(200, 23);
             this.Z_S.TabIndex = 1;
-            this.Z_S.Text = "Znajdz serwery ";
+            this.Z_S.Text = "Znajdź serwery ";
             this.Z_S.UseVisualStyleBackColor = true;
-            this.Z_S.Click += new System.EventHandler(this.btn_Ser);
+            this.Z_S.Click += new System.EventHandler(this.btn_findServers);
             // 
             // Z_B
             // 
@@ -232,25 +232,25 @@
             this.Z_B.Name = "Z_B";
             this.Z_B.Size = new System.Drawing.Size(200, 23);
             this.Z_B.TabIndex = 8;
-            this.Z_B.Text = "Znajdz bazę danych";
+            this.Z_B.Text = "Znajdź bazę danych";
             this.Z_B.UseVisualStyleBackColor = true;
-            this.Z_B.Click += new System.EventHandler(this.btn_Baz);
+            this.Z_B.Click += new System.EventHandler(this.btn_findBases);
             // 
             // panel5
             // 
-            this.panel5.Controls.Add(this.cbBaz);
+            this.panel5.Controls.Add(this.cbBase);
             this.panel5.Location = new System.Drawing.Point(495, 217);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(200, 57);
             this.panel5.TabIndex = 9;
             // 
-            // cbBaz
+            // cbBase
             // 
-            this.cbBaz.FormattingEnabled = true;
-            this.cbBaz.Location = new System.Drawing.Point(3, 3);
-            this.cbBaz.Name = "cbBaz";
-            this.cbBaz.Size = new System.Drawing.Size(194, 24);
-            this.cbBaz.TabIndex = 0;
+            this.cbBase.FormattingEnabled = true;
+            this.cbBase.Location = new System.Drawing.Point(3, 3);
+            this.cbBase.Name = "cbBaz";
+            this.cbBase.Size = new System.Drawing.Size(194, 24);
+            this.cbBase.TabIndex = 0;
             // 
             // Z_T
             // 
@@ -258,25 +258,25 @@
             this.Z_T.Name = "Z_T";
             this.Z_T.Size = new System.Drawing.Size(200, 23);
             this.Z_T.TabIndex = 10;
-            this.Z_T.Text = "Znajdz tabele";
+            this.Z_T.Text = "Znajdź tabele";
             this.Z_T.UseVisualStyleBackColor = true;
-            this.Z_T.Click += new System.EventHandler(this.btn_Tab);
+            this.Z_T.Click += new System.EventHandler(this.btn_findTables);
             // 
             // panel6
             // 
-            this.panel6.Controls.Add(this.cbTab);
+            this.panel6.Controls.Add(this.cbTable);
             this.panel6.Location = new System.Drawing.Point(495, 329);
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(200, 57);
             this.panel6.TabIndex = 11;
             // 
-            // cbTab
+            // cbTable
             // 
-            this.cbTab.FormattingEnabled = true;
-            this.cbTab.Location = new System.Drawing.Point(3, 3);
-            this.cbTab.Name = "cbTab";
-            this.cbTab.Size = new System.Drawing.Size(194, 24);
-            this.cbTab.TabIndex = 0;
+            this.cbTable.FormattingEnabled = true;
+            this.cbTable.Location = new System.Drawing.Point(3, 3);
+            this.cbTable.Name = "cbTab";
+            this.cbTable.Size = new System.Drawing.Size(194, 24);
+            this.cbTable.TabIndex = 0;
             // 
             // Form1
             // 
@@ -291,7 +291,7 @@
             this.Controls.Add(this.Z_S);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.tbNameCol);
+            this.Controls.Add(this.tableColumnName);
             this.Controls.Add(this.btn_delCol);
             this.Controls.Add(this.btn_addCol);
             this.Controls.Add(this.btnOdswiez);
@@ -316,7 +316,7 @@
         private System.Windows.Forms.Button btnOdswiez;
         private System.Windows.Forms.Button btn_addCol;
         private System.Windows.Forms.Button btn_delCol;
-        private System.Windows.Forms.TextBox tbNameCol;
+        private System.Windows.Forms.TextBox tableColumnName;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Panel panel2;
@@ -328,14 +328,14 @@
         private System.Windows.Forms.ComboBox comboBox3;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.ComboBox cbSer;
+        private System.Windows.Forms.ComboBox cbServer;
         private System.Windows.Forms.Button Z_S;
         private System.Windows.Forms.Button Z_B;
         private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.ComboBox cbBaz;
+        private System.Windows.Forms.ComboBox cbBase;
         private System.Windows.Forms.Button Z_T;
         private System.Windows.Forms.Panel panel6;
-        private System.Windows.Forms.ComboBox cbTab;
+        private System.Windows.Forms.ComboBox cbTable;
     }
 }
 

@@ -1,16 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Data;
-using System.Data.Common;
 using System.Data.Sql;
 using System.Data.SqlClient;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SQL_service
@@ -22,24 +14,26 @@ namespace SQL_service
         {
             InitializeComponent();
         }
-        private void btnOdswiez_Click(object sender, EventArgs e)
+        private void btn_showDataFromTable(object sender, EventArgs e)
         {
-            
             try
             {
                 using (SqlConnection connection = new SqlConnection(conStr))
                 {
-                    connection.Open();
+                    if (cbTable.SelectedIndex > -1)
+                    {
+                        connection.Open();
 
-                    // Wykonaj zapytanie do bazy danych
-                    string query = $"SELECT * FROM {cbTab.SelectedItem.ToString()};";
-                    SqlCommand command = new SqlCommand(query, connection);
-                    SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
-                    DataTable dataTable = new DataTable();
-                    dataAdapter.Fill(dataTable);
+                        // Wykonaj zapytanie do bazy danych
+                        string query = $"SELECT * FROM {cbTable.SelectedItem.ToString()};";
+                        SqlCommand command = new SqlCommand(query, connection);
+                        SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+                        DataTable dataTable = new DataTable();
+                        dataAdapter.Fill(dataTable);
 
-                    dataGridDB.RowHeadersVisible = false;
-                    dataGridDB.DataSource = dataTable;
+                        dataGridDB.RowHeadersVisible = false;
+                        dataGridDB.DataSource = dataTable;
+                    }
                 }
             }
             catch (Exception ex)
@@ -48,43 +42,48 @@ namespace SQL_service
             }
         }
 
-        private void btn_addCol_Click(object sender, EventArgs e)
+        private void btn_addColumn(object sender, EventArgs e)
         {
             using (SqlConnection connection = new SqlConnection(conStr))
             {
-                connection.Open();
+                if (cbTable.SelectedIndex > -1)
+                {
+                    connection.Open();
 
-                string query = "ALTER TABLE dbo.Pracownicy ADD " + tbNameCol.Text + " VARCHAR(50);";
-                SqlCommand command = new SqlCommand(query, connection);
+                    string query = $"ALTER TABLE {cbTable.SelectedItem.ToString()} ADD " + tableColumnName.Text + " VARCHAR(50);";
+                    SqlCommand command = new SqlCommand(query, connection);
 
-                SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
-                DataTable dataTable = new DataTable();
-                dataAdapter.Fill(dataTable);
-                dataGridDB.RowHeadersVisible = false;
-                dataGridDB.DataSource = dataTable;
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+                    DataTable dataTable = new DataTable();
+                    dataAdapter.Fill(dataTable);
+                    dataGridDB.RowHeadersVisible = false;
+                    dataGridDB.DataSource = dataTable;
+                }
             }
         }
 
-        private void btn_delCol_Click(object sender, EventArgs e)
+        private void btn_deleteColumn(object sender, EventArgs e)
         {
             using (SqlConnection connection = new SqlConnection(conStr))
             {
-                connection.Open();
+                if (cbTable.SelectedIndex > -1)
+                {
+                    connection.Open();
 
-                string query = "ALTER TABLE dbo.Pracownicy DROP COLUMN " + tbNameCol.Text + ";";
-                SqlCommand command = new SqlCommand(query, connection);
-
-                SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
-                DataTable dataTable = new DataTable();
-                dataAdapter.Fill(dataTable);
-                dataGridDB.RowHeadersVisible = false;
-                dataGridDB.DataSource = dataTable;
+                    string query = $"ALTER TABLE {cbTable.SelectedItem.ToString()} DROP COLUMN " + tableColumnName.Text + ";";
+                    SqlCommand command = new SqlCommand(query, connection);
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+                    DataTable dataTable = new DataTable();
+                    dataAdapter.Fill(dataTable);
+                    dataGridDB.RowHeadersVisible = false;
+                    dataGridDB.DataSource = dataTable;
+                }
             }
         }
 
-        private void btn_Ser(object sender, EventArgs e)
+        private void btn_findServers(object sender, EventArgs e)
         {
-            cbSer.Items.Add("Yes");
+            //cbServer.Items.Add("Yes");
             // Utwórz instancję SqlDataSourceEnumerator
             SqlDataSourceEnumerator instance = SqlDataSourceEnumerator.Instance;
 
@@ -92,10 +91,12 @@ namespace SQL_service
             DataTable table = instance.GetDataSources();
 
             // Przejdź przez każdy wiersz w tabeli
+            cbServer.Items.Clear();
+            cbServer.Text = string.Empty;
             foreach (DataRow row in table.Rows)
             {
                 // Wydrukuj informacje o serwerze SQL
-                cbSer.Items.Add(row["ServerName"].ToString() + @"\" + row["InstanceName"]?.ToString());
+                cbServer.Items.Add(row["ServerName"].ToString() + @"\" + row["InstanceName"]?.ToString());
                 //Console.WriteLine("Nazwa serwera: " + row["ServerName"]);
                 //if (string.IsNullOrEmpty(row["InstanceName"].ToString()))
                 //{
@@ -110,37 +111,47 @@ namespace SQL_service
             }
         }
 
-        private void btn_Baz(object sender, EventArgs e)
+        private void btn_findBases(object sender, EventArgs e)
         {
-            string connectionString = $@"Data Source={cbSer.SelectedItem.ToString()};
-            Integrated Security=True;Connect Timeout=30;Encrypt=False;";
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            if (cbServer.SelectedIndex > -1)
             {
-                connection.Open();
-                DataTable databases = connection.GetSchema("Databases");
-                foreach (DataRow database in databases.Rows)
+                string connectionString = $@"Data Source={cbServer.SelectedItem.ToString()};
+                Integrated Security=True;Connect Timeout=30;Encrypt=False;";
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    string databaseName = database.Field<string>("database_name");
-                    cbBaz.Items.Add(databaseName);
+                    connection.Open();
+                    DataTable databases = connection.GetSchema("Databases");
+                    cbBase.Items.Clear();
+                    cbBase.Text = string.Empty;
+                    foreach (DataRow database in databases.Rows)
+                    {
+                        string databaseName = database.Field<string>("database_name");
+                        cbBase.Items.Add(databaseName);
+                    }
                 }
             }
         }
 
-        private void btn_Tab(object sender, EventArgs e)
+        private void btn_findTables(object sender, EventArgs e)
         {
-            string connectionString = $@"Data Source={cbSer.SelectedItem.ToString()};
-            Initial Catalog={cbBaz.SelectedItem.ToString()};Integrated Security=True;Connect Timeout=30;Encrypt=False;";
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            if(cbServer.SelectedIndex > -1)
             {
-                connection.Open();
-
-                DataTable schema = connection.GetSchema("Tables");
-                foreach (DataRow row in schema.Rows)
+                string connectionString = $@"Data Source={cbServer.SelectedItem.ToString()};
+                Initial Catalog={cbBase.SelectedItem.ToString()};Integrated Security=True;Connect Timeout=30;Encrypt=False;";
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    cbTab.Items.Add(row[2]);
+                    connection.Open();
+
+                    DataTable schema = connection.GetSchema("Tables");
+                    cbTable.Items.Clear();
+                    cbTable.Text = string.Empty;
+                    foreach (DataRow row in schema.Rows)
+                    {
+                        cbTable.Items.Add(row[2]);
+                    }
                 }
+                conStr = connectionString;
             }
-            conStr = connectionString;
         }
     }
 }
