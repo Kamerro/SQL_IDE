@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Data;
 using System.Data.Sql;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Runtime.ConstrainedExecution;
 using System.Windows.Forms;
-
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using Microsoft.Win32;
 namespace SQL_service
 {
     public partial class Form1 : Form
@@ -12,7 +15,13 @@ namespace SQL_service
        public string conStr;
         public Form1()
         {
+
             InitializeComponent();
+            if (!String.IsNullOrEmpty(getRegistryKey()))
+            {
+                Z_S.Enabled = false;
+                cbServer.Enabled = false;
+            }
         }
         private void btn_showDataFromTable(object sender, EventArgs e)
         {
@@ -113,10 +122,17 @@ namespace SQL_service
 
         private void btn_findBases(object sender, EventArgs e)
         {
-            if (cbServer.SelectedIndex > -1)
+            string connectionString;
+            if (String.IsNullOrEmpty(getRegistryKey()))
             {
-                string connectionString = $@"Data Source={cbServer.SelectedItem.ToString()};
-                Integrated Security=True;Connect Timeout=30;Encrypt=False;";
+                connectionString = $@"Data Source={cbServer.SelectedItem.ToString()};
+            Integrated Security=True;Connect Timeout=30;Encrypt=False;";
+                ModifyRegistry(connectionString);
+            }
+            else
+            {
+                connectionString = getRegistryKey();
+            }
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -129,7 +145,6 @@ namespace SQL_service
                         cbBase.Items.Add(databaseName);
                     }
                 }
-            }
         }
 
         private void btn_findTables(object sender, EventArgs e)
@@ -153,5 +168,48 @@ namespace SQL_service
                 conStr = connectionString;
             }
         }
+
+        public static string getRegistryKey()
+        {
+
+            string keyName = "Software\\SQLService_Database";
+            string valueName = "wersja";
+
+            RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(keyName, true);
+
+            if (registryKey == null)
+            {
+                registryKey = Registry.CurrentUser.CreateSubKey(keyName);
+            }
+
+            string getValue = (string)registryKey.GetValue(valueName);
+
+            registryKey.Close();
+            return getValue;
+        }
+
+        public static void ModifyRegistry(string valueKey)
+        {
+
+            string keyName = "Software\\SQLService_Database";
+            string valueName = "wersja";
+
+            RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(keyName, true);
+
+            if (registryKey == null)
+            {
+                registryKey = Registry.CurrentUser.CreateSubKey(keyName);
+            }
+
+            string getValue = (string)registryKey.GetValue(valueName);
+
+            if (String.IsNullOrEmpty(getValue))
+            {
+                registryKey.SetValue(valueName, valueKey);
+            }
+
+            registryKey.Close();
+        }
     }
+
 }
