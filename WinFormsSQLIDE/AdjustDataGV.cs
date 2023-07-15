@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,6 +34,10 @@ namespace WinFormsSQLIDE
                 totalWidth += column.Width;
             }
             dgv.Width = totalWidth;
+        }
+        public static void AdjustCellColors(DataGridView dgv,Color color)
+        {
+           dgv.BackgroundColor = color;
         }
     }
 }

@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WinFormsSQLIDE.exe" size="15360">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WinFormsSQLIDE.exe" size="19456">
       <assemblyIdentity name="WinFormsSQLIDE" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>8acSXOCSCslM+FiOkQWFXhkCWhrSEldH4I3LhK8NaIo=</dsig:DigestValue>
+        <dsig:DigestValue>VH8zxgatH0NoDQl1f7oQFiCeMNZ9ZqegC7y4MP3TZo8=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
